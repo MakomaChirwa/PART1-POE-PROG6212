@@ -1,57 +1,34 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using prototype1.Models;
+using Microsoft.AspNetCore.Http;
 
-namespace prototype1.Controllers
+namespace CMCS.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        public IActionResult Index() => View();
+        public IActionResult Login() => View();
+        public IActionResult Register() => View();
+        public IActionResult Claim() => View();
+        public IActionResult TrackClaims() => View();
+        public IActionResult PreApprove() => View();
+        public IActionResult Approve() => View();
 
-        public HomeController(ILogger<HomeController> logger)
+        [HttpPost]
+        public IActionResult Login(string username, string password)
         {
-            _logger = logger;
-        } 
-
-        public IActionResult Index()
-        {
-            return View();
-        }
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-        public IActionResult Approve()
-        {
-            return View();
-        }
-        public IActionResult Claim()
-        {
-            return View();
-        }
-        public IActionResult Login()
-        {
-            return View();
+            // For prototype: no validation, just redirect
+            if (HttpContext.Session.GetString("Role") == null)
+            {
+                HttpContext.Session.SetString("Role", "Lecturer"); // default
+            }
+            return RedirectToAction("Index");
         }
 
-        public IActionResult Register()
+        [HttpPost]
+        public IActionResult Register(string fullname, string email, string password, string confirmPassword, string role)
         {
-            return View();
-        }
-        public IActionResult PreApprove()
-        {
-            return View();
-        }
-        public IActionResult TrackClaim()
-        {
-            return View();
-        }
-
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            HttpContext.Session.SetString("Role", role);
+            return RedirectToAction("Login");
         }
     }
 }

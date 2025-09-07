@@ -1,4 +1,44 @@
-﻿
-                  
-            @RenderBody()
-       
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var role = HttpContextAccessor.HttpContext.Session.GetString("Role");
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CMCS Prototype - @ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1>Contract Monthly Claim System (CMCS) - Prototype</h1>
+            <nav class="main-nav">
+                <a href="/Home/Index">Dashboard</a>
+                @if(role == "Lecturer"){
+                    <a href="/Home/Claim">Claim</a>
+                    <a href="/Home/TrackClaims">Track Claims</a>
+                }
+                @if(role == "Programme Coordinator"){
+                    <a href="/Home/PreApprove">Pre-Approve</a>
+                }
+                @if(role == "Academic Manager"){
+                    <a href="/Home/Approve">Approve</a>
+                }
+                <a href="/Home/Register">Register</a>
+                <a href="/Home/Login">Login</a>
+            </nav>
+        </div>
+    </header>
+    <main class="container">
+        @RenderBody()
+    </main>
+    <footer class="site-footer">
+        <div class="container">
+            <small>&copy; CMCS Prototype</small>
+        </div>
+    </footer>
+</body>
+</html>
